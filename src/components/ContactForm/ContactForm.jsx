@@ -3,11 +3,35 @@ import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
 
 class ContactForm extends Component {
+  state = {
+    name: '',
+    number: '',
+  };
+
+  handleEnterName = ({ target: { name, value } }) => {
+    this.setState({
+      [name]: value,
+    });
+  };
+
+  handleClearState = () => {
+    this.setState({
+      name: '',
+      number: '',
+    });
+  };
+
   render() {
-    const { handleAddContact, handleEnterName, name, number } = this.props;
+    const { handleAddContact } = this.props;
+    const { name, number } = this.state;
 
     return (
-      <form onSubmit={handleAddContact} className={css.contact__form}>
+      <form
+        onSubmit={event =>
+          handleAddContact(event, name, number, this.handleClearState)
+        }
+        className={css.contact__form}
+      >
         <label className={css.contact__name}>
           Name:
           <input
@@ -16,7 +40,7 @@ class ContactForm extends Component {
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
-            onChange={handleEnterName}
+            onChange={this.handleEnterName}
             value={name}
           />
           <label className={css.contact__number}>
@@ -28,7 +52,7 @@ class ContactForm extends Component {
               title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
               required
               value={number}
-              onChange={handleEnterName}
+              onChange={this.handleEnterName}
             />
           </label>
         </label>
@@ -40,9 +64,6 @@ class ContactForm extends Component {
 
 ContactForm.propTypes = {
   handleAddContact: PropTypes.func.isRequired,
-  handleEnterName: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
 };
 
 export default ContactForm;

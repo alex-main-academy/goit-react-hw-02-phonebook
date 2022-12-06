@@ -13,15 +13,7 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
-    number: '',
     filter: '',
-  };
-
-  handleEnterName = ({ target: { name, value } }) => {
-    this.setState({
-      [name]: value,
-    });
   };
 
   handleFilter = event => {
@@ -30,34 +22,30 @@ export class App extends Component {
     });
   };
 
-  handleAddContact = event => {
+  handleAddContact = (event, name, number, handleClearState) => {
     event.preventDefault();
-    const userName = event.target.elements.name.value;
-    const userNumber = event.target.elements.number.value;
 
     const isUser = Boolean(
-      this.state.contacts.find(item => item.name === userName)
+      this.state.contacts.find(item => item.name === name)
     );
 
     if (isUser) {
-      alert(`${userName} is already in contacts`);
+      alert(`${name} is already in contacts`);
+      handleClearState();
     } else {
       this.setState(prevState => ({
         contacts: [
           ...prevState.contacts,
           {
-            name: userName,
-            number: userNumber,
+            name: name,
+            number: number,
             id: nanoid(),
           },
         ],
       }));
-    }
 
-    this.setState({
-      name: '',
-      number: '',
-    });
+      handleClearState();
+    }
   };
 
   handleDeleteContact = id => {
@@ -70,12 +58,7 @@ export class App extends Component {
     return (
       <section className="phonebook">
         <h1 className="phonebook__title">Phone book</h1>
-        <ContactForm
-          handleAddContact={this.handleAddContact}
-          handleEnterName={this.handleEnterName}
-          name={this.state.name}
-          number={this.state.number}
-        />
+        <ContactForm handleAddContact={this.handleAddContact} />
         <h2 className="contacts__title">Contacts:</h2>
         <SearchContact
           contacts={this.state.contacts}

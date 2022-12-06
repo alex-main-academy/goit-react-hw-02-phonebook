@@ -5,11 +5,33 @@ import css from './ContactsList.module.css';
 class ContactsList extends Component {
   render() {
     const { contacts, filter, handleDeleteContact } = this.props;
+    const filteredArray = [
+      ...contacts.filter(item =>
+        item.name.toLowerCase().includes(filter.toLowerCase())
+      ),
+    ];
 
     return (
-      <>
+      <ul className={css.contacts__list}>
+        {filter && (
+          <>
+            {filteredArray.map(({ name, number, id }) => {
+              return (
+                <li key={id} className={css.contacts__item}>
+                  {name} {number}
+                  <button
+                    onClick={() => handleDeleteContact(id)}
+                    className={css.contacts__delete}
+                  >
+                    x
+                  </button>
+                </li>
+              );
+            })}
+          </>
+        )}
         {!filter && (
-          <ul className={css.contacts__list}>
+          <>
             {contacts.map(({ name, number, id }) => {
               return (
                 <li key={id} className={css.contacts__item}>
@@ -23,9 +45,9 @@ class ContactsList extends Component {
                 </li>
               );
             })}
-          </ul>
+          </>
         )}
-      </>
+      </ul>
     );
   }
 }
