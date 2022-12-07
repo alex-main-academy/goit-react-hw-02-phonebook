@@ -5,48 +5,33 @@ import css from './ContactsList.module.css';
 class ContactsList extends Component {
   render() {
     const { contacts, filter, handleDeleteContact } = this.props;
-    const filteredArray = [
-      ...contacts.filter(item =>
-        item.name.toLowerCase().includes(filter.toLowerCase())
-      ),
-    ];
+    let newArray = [];
+
+    if (filter) {
+      newArray = [
+        ...contacts.filter(item =>
+          item.name.toLowerCase().includes(filter.toLowerCase())
+        ),
+      ];
+    } else {
+      newArray = [...contacts];
+    }
 
     return (
       <ul className={css.contacts__list}>
-        {filter && (
-          <>
-            {filteredArray.map(({ name, number, id }) => {
-              return (
-                <li key={id} className={css.contacts__item}>
-                  {name} {number}
-                  <button
-                    onClick={() => handleDeleteContact(id)}
-                    className={css.contacts__delete}
-                  >
-                    x
-                  </button>
-                </li>
-              );
-            })}
-          </>
-        )}
-        {!filter && (
-          <>
-            {contacts.map(({ name, number, id }) => {
-              return (
-                <li key={id} className={css.contacts__item}>
-                  {name} {number}
-                  <button
-                    onClick={() => handleDeleteContact(id)}
-                    className={css.contacts__delete}
-                  >
-                    x
-                  </button>
-                </li>
-              );
-            })}
-          </>
-        )}
+        {newArray.map(({ name, number, id }) => {
+          return (
+            <li key={id} className={css.contacts__item}>
+              {name} {number}
+              <button
+                onClick={() => handleDeleteContact(id)}
+                className={css.contacts__delete}
+              >
+                x
+              </button>
+            </li>
+          );
+        })}
       </ul>
     );
   }
